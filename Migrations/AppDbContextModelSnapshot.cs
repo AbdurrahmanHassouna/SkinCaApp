@@ -40,9 +40,6 @@ namespace APIdemo.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Country")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -55,16 +52,25 @@ namespace APIdemo.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("Governorate")
+                        .HasColumnType("int");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("float");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -113,17 +119,18 @@ namespace APIdemo.Migrations
                         {
                             Id = "341743f0-asd2–42de-afbf-59kmkkmk72cf6",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e9d64b05-e3c9-4d63-84bc-db1356c5ec3b",
+                            ConcurrencyStamp = "71dd4f74-f784-41e5-916b-eb97dfb2c6c0",
                             Email = "SuperAdmin@test.com",
                             EmailConfirmed = true,
                             FirstName = "Super",
+                            Governorate = 0,
                             LastName = "Admin",
                             LockoutEnabled = false,
                             NormalizedEmail = "SuperAdmin@TEST.COM",
                             NormalizedUserName = "SUPERADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAENjccfM8OEVyzmvCb4pVlBJ9BV7UCQqBv8sa5jpMMtct5/Egt69inaQuiAP0YnDBCg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGhQVVaKMMOUEBMPghYLSjqbuUR53TeVhFuKcnkSe62vB/7KJc5CB7AEr14DHDvI+Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5277d615-e137-4b47-903a-35e460b119a5",
+                            SecurityStamp = "864801e9-0c7f-4ae4-b5a9-d1f01c877770",
                             TwoFactorEnabled = false,
                             UserName = "SuperAdmin@TEST.COM"
                         });
@@ -262,6 +269,70 @@ namespace APIdemo.Migrations
                     b.ToTable("Diseases");
                 });
 
+            modelBuilder.Entity("APIdemo.Models.DoctorInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<decimal>("ClinicFees")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Experience")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Services")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Specialization")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DoctorInfos");
+                });
+
+            modelBuilder.Entity("APIdemo.Models.DoctorWorkingDay", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<TimeSpan>("CloseAt")
+                        .HasColumnType("time");
+
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DoctorInfoId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("OpenAt")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorInfoId");
+
+                    b.ToTable("DoctorWorkingDays");
+                });
+
             modelBuilder.Entity("APIdemo.Models.MedicalReport", b =>
                 {
                     b.Property<int>("Id")
@@ -270,9 +341,15 @@ namespace APIdemo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<byte[]>("Report")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ReportName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ReportType")
                         .HasColumnType("int");
@@ -356,8 +433,8 @@ namespace APIdemo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("Alarm")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan>("Alarm")
+                        .HasColumnType("time");
 
                     b.Property<int>("Amount")
                         .HasColumnType("int");
@@ -414,15 +491,15 @@ namespace APIdemo.Migrations
                         {
                             Id = "02174cf0–9412–4cfe-afbf-59f706d72cf6",
                             ConcurrencyStamp = "02174cf0–9412–4cfe-afbf-59f706d72cf6",
-                            Name = "SuperAdmin",
-                            NormalizedName = "SUPERADMIN"
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "d7fc4052-eaf9-4b0e-b00a-dabcfe0917e1",
                             ConcurrencyStamp = "d7fc4052-eaf9-4b0e-b00a-dabcfe0917e1",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
+                            Name = "Doctor",
+                            NormalizedName = "Doctor"
                         },
                         new
                         {
@@ -606,6 +683,28 @@ namespace APIdemo.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("APIdemo.Models.DoctorInfo", b =>
+                {
+                    b.HasOne("APIdemo.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("APIdemo.Models.DoctorWorkingDay", b =>
+                {
+                    b.HasOne("APIdemo.Models.DoctorInfo", "DoctorInfo")
+                        .WithMany("WorkingDays")
+                        .HasForeignKey("DoctorInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DoctorInfo");
+                });
+
             modelBuilder.Entity("APIdemo.Models.MedicalReport", b =>
                 {
                     b.HasOne("APIdemo.Models.ApplicationUser", "User")
@@ -729,6 +828,11 @@ namespace APIdemo.Migrations
                     b.Navigation("ApplicationUserChats");
 
                     b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("APIdemo.Models.DoctorInfo", b =>
+                {
+                    b.Navigation("WorkingDays");
                 });
 #pragma warning restore 612, 618
         }

@@ -5,6 +5,7 @@ using APIdemo.Services;
 using APIdemo.TokenProviders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -25,7 +26,7 @@ namespace APIdemo
                 options.SuppressModelStateInvalidFilter = false;
 
             });
-
+            
             builder.Services.Configure<JWT>(_configuration.GetSection("JWT"));
             builder.Services.Configure<NetworkSecrets>(_configuration.GetSection("NetworkSecrets"));
 
@@ -75,28 +76,28 @@ namespace APIdemo
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddRazorPages();
+            
 
             var app = builder.Build();
+            app.UseHttpsRedirection();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI();
             }
+            
+            
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
-            app.UseRouting();
-            app.UseHttpsRedirection();
+            
 
             app.UseAuthentication();
             app.UseAuthorization();
+           
 
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.MapControllers();
+           
             
             app.Run();
         }

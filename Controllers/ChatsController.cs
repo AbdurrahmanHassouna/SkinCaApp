@@ -48,6 +48,7 @@ namespace APIdemo.Controllers
         public async Task<IActionResult> GetChat(int id)
         {
             var chat = await _context.Chats
+                .Include(c => c.Users)
                 .Include(c => c.Messages)
                 .FirstOrDefaultAsync(c => c.Id == id
                     &&c.ApplicationUserChats.Any(c => c.IsDeleted==false&&c.UserId==User.FindFirstValue(ClaimTypes.NameIdentifier)));
@@ -98,12 +99,15 @@ namespace APIdemo.Controllers
                 return BadRequest(new { status = false, message = "chat aready exists" });
             }
             chat = new Chat();
-            chat.Users.Add(user);
-            chat.Users.Add(currentUser);
+            
             _context.Chats.Add(chat);
             await _context.SaveChangesAsync();
+
+            _context.ApplicationUserChats.Add(new ApplicationUserChat { UserId=user.Id,ChatId=chat.Id});
+            _context.ApplicationUserChats.Add(new ApplicationUserChat { UserId=currentUser.Id, ChatId=chat.Id });
+            await _context.SaveChangesAsync();
             ChatToChatDto(chat, out ChatDto chatDto);
-            return CreatedAtAction(nameof(GetChat),new { status = true, chat = chatDto });
+            return CreatedAtAction(nameof(GetChat), new {id = chat.Id},new { status = true, chat = chatDto });
         }
         [NonAction]
         public void ChatToChatDto(Chat chat, out ChatDto chatDto)
@@ -120,7 +124,7 @@ namespace APIdemo.Controllers
                           Content = u.Content,
                           Id = u.Id
                       }).ToList(),
-                Users=chat.Users.Select(c => new UserDto
+                Users=chat.Users.Select(c => new ChatUserDto
                 { Id=c.Id, FirstName=c.FirstName, LastName=c.LastName, Picture=c.ProfilePicture })
                         .ToList()
             };

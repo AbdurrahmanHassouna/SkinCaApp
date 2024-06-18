@@ -41,27 +41,27 @@ namespace APIdemo.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<DiseaseDto>> GetDisease(int id)
         {
-            var disease = await _context.Diseases
-                .Select(d => new DiseaseDto
-                {
-                    Id = d.Id,
-                    Title = d.Title,
-                    Specialty = d.Specialty,
-                    Symptoms = d.Symptoms,
-                    Types = d.Types,
-                    Causes = d.Causes,
-                    DiagnosticMethods = d.DiagnosticMethods,
-                    Prevention = d.Prevention,
-                    Image = d.Image
-                })
-                .FirstOrDefaultAsync(d => d.Id == id);
+            var disease = await _context.Diseases.FirstOrDefaultAsync(d => d.Id == id);
 
             if (disease == null)
             {
                 return NotFound();
             }
+            DiseaseDto? diseaseDto = null;
 
-            return disease;
+            diseaseDto = new DiseaseDto
+            {
+                Id = disease.Id,
+                Title = disease.Title,
+                Specialty = disease.Specialty,
+                Symptoms = disease.Symptoms.Split(","),
+                Types = disease.Types?.Split(","),
+                Causes = disease.Causes?.Split(","),
+                DiagnosticMethods = disease.DiagnosticMethods?.Split(","),
+                Prevention = disease.Prevention?.Split(","),
+                Image = disease.Image
+            };
+            return diseaseDto;
         }
         // GET: api/Diseases/search
         [HttpGet("search")]
@@ -74,24 +74,24 @@ namespace APIdemo.Controllers
 
             var diseases = await _context.Diseases
                 .Where(d => d.Title.Contains(name))
-                .Select(d => new DiseaseDto
-                {
-                    Id = d.Id,
-                    Title = d.Title,
-                    Specialty = d.Specialty,
-                    Symptoms = d.Symptoms,
-                    Types = d.Types,
-                    Causes = d.Causes,
-                    DiagnosticMethods = d.DiagnosticMethods,
-                    Prevention = d.Prevention,
-                    Image = d.Image
-                }).ToListAsync();
+                .ToListAsync();
 
             if (diseases.Count == 0)
             {
                 return NotFound($"No diseases found with name containing '{name}'.");
             }
-
+            var diseasesDto = diseases.Select(d => new DiseaseDto
+            {
+                Id = d.Id,
+                Title = d.Title,
+                Specialty = d.Specialty,
+                Symptoms = d.Symptoms.Split(","),
+                Types = d.Types?.Split(','),
+                Causes = d.Causes?.Split(','),
+                DiagnosticMethods = d.DiagnosticMethods?.Split(','),
+                Prevention = d.Prevention?.Split(','),
+                Image = d.Image
+            });
             return Ok(diseases);
         }
 
@@ -112,11 +112,11 @@ namespace APIdemo.Controllers
 
             disease.Title = diseaseDto.Title;
             disease.Specialty = diseaseDto.Specialty;
-            disease.Symptoms = diseaseDto.Symptoms;
-            disease.Types = diseaseDto.Types;
-            disease.Causes = diseaseDto.Causes;
-            disease.DiagnosticMethods = diseaseDto.DiagnosticMethods;
-            disease.Prevention = diseaseDto.Prevention;
+            disease.Symptoms = string.Join(',', diseaseDto.Symptoms);
+            disease.Types = string.Join(',', diseaseDto.Types);
+            disease.Causes = string.Join(',', diseaseDto.Causes);
+            disease.DiagnosticMethods = string.Join(',', diseaseDto.DiagnosticMethods);
+            disease.Prevention = string.Join(',', diseaseDto.Prevention);
 
             if (imageFile != null)
             {
@@ -164,12 +164,12 @@ namespace APIdemo.Controllers
             {
                 UserId=User.FindFirstValue(ClaimTypes.NameIdentifier),
                 Title = diseaseDto.Title,
-                Specialty = diseaseDto.Specialty,
-                Symptoms = diseaseDto.Symptoms,
-                Types = diseaseDto.Types,
-                Causes = diseaseDto.Causes,
-                DiagnosticMethods = diseaseDto.DiagnosticMethods,
-                Prevention = diseaseDto.Prevention
+                Specialty = string.Join(',', diseaseDto.Specialty),
+                Symptoms = string.Join(',', diseaseDto.Symptoms),
+                Types = string.Join(',', diseaseDto.Types),
+                Causes = string.Join(',', diseaseDto.Causes),
+                DiagnosticMethods = string.Join(',', diseaseDto.DiagnosticMethods),
+                Prevention = string.Join(',', diseaseDto.Prevention)
             };
 
             if (imageFile != null)

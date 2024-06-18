@@ -34,7 +34,7 @@ namespace APIdemo.Services
             _context = context;
         }
 
-        public async Task<AuthModel> RegisterAsync(RegisterModel model, string? lang)
+        public async Task<AuthModel> RegisterAsync(RegisterModel model,string? lang,string? role ="User")
         {
             if (await _userManager.FindByEmailAsync(model.Email) is not null)
             {
@@ -53,14 +53,15 @@ namespace APIdemo.Services
                 LastName = model.LastName,
                 BirthDate = model.BirthDate,
                 Address = model.Address,
-                Country = model.Country
+                Governorate = model.Governorate,
+                Latitude=model.Latitude,
+                Longitude=model.Longitude
             };
-            if (model.File != null)
+            if (model.ProfilePicture != null)
             {
-
                 using (var memoryStream = new MemoryStream())
                 {
-                    await model.File.CopyToAsync(memoryStream);
+                    await model.ProfilePicture.CopyToAsync(memoryStream);
                     user.ProfilePicture = memoryStream.ToArray();
                 }
                 if (user.ProfilePicture != null)
@@ -77,15 +78,16 @@ namespace APIdemo.Services
             {
                 return new AuthModel { Errors = result.Errors.Select(e => e.Description).ToList() };
             }
-
-            await _userManager.AddToRoleAsync(user, "User");
+            await _userManager.AddToRoleAsync(user,role);
+           
             var jwtSecurityToken = await CreateJwtToken(user);
             return new AuthModel
             {
+                Id = user.Id,
                 Email = user.Email,
+                Roles =await _userManager.GetRolesAsync(user),
                 ExpiresOn = jwtSecurityToken.ValidTo,
                 IsAuthenticated = true,
-                Roles = new List<string> { "User" },
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken)
             };
 
@@ -95,9 +97,9 @@ namespace APIdemo.Services
             var userClaims = await _userManager.GetClaimsAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
             var roleClaims = new List<Claim>();
-
-            foreach (var role in roles)
-                roleClaims.Add(new Claim("roles", role));
+            
+            foreach (var sRole in roles)
+                roleClaims.Add(new Claim("roles", sRole));
 
             var claims = new[]
             {
@@ -136,11 +138,11 @@ namespace APIdemo.Services
                     Message = (lang == "ar") ? "كلمة مرور خاطئة" : "Password is not Correct"
                 };
             }
-            if (!await _userManager.IsEmailConfirmedAsync(user))
+            /*if (!await _userManager.IsEmailConfirmedAsync(user))
                 return new AuthModel
                 {
                     Message = (lang == "ar") ? "الحساب غير موثق" : "Email not confirmed"
-                };
+                };*/
             var JwtSecurityToken = await CreateJwtToken(user);
             return new AuthModel
             {

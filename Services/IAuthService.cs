@@ -7,7 +7,7 @@ namespace APIdemo.Services
 {
     public interface IAuthService
     {
-        Task<AuthModel> RegisterAsync(RegisterModel model,string? lang);
+        Task<AuthModel> RegisterAsync(RegisterModel model,string? lang,string? role="User");
         Task<AuthModel> GetTokenAsync(LoginModel model,string? lang);
         /*Task<IDictionary<string,object>?> GetValidatedToken(string Header);*/
         Task<string?> GetUserIdAsync(string Header);

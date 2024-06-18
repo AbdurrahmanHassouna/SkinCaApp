@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace APIdemo.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,7 +31,9 @@ namespace APIdemo.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     BirthDate = table.Column<DateTime>(type: "DATE", nullable: true),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Governorate = table.Column<int>(type: "int", nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: true),
+                    Longitude = table.Column<double>(type: "float", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProfilePicture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -180,8 +182,8 @@ namespace APIdemo.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UsreId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -190,7 +192,8 @@ namespace APIdemo.Migrations
                         name: "FK_Banners_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -200,9 +203,14 @@ namespace APIdemo.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Body = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    Image = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Specialty = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Symptoms = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Types = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Causes = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DiagnosticMethods = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Prevention = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -216,13 +224,39 @@ namespace APIdemo.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DoctorInfos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Experience = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ClinicFees = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Services = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Specialization = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DoctorInfos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DoctorInfos_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MedicalReports",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Report = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    ReportName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Report = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     ReportType = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -266,7 +300,7 @@ namespace APIdemo.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Amount = table.Column<int>(type: "int", nullable: false),
                     ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Alarm = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Alarm = table.Column<TimeSpan>(type: "time", nullable: false),
                     BillType = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -361,20 +395,42 @@ namespace APIdemo.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "DoctorWorkingDays",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DoctorInfoId = table.Column<int>(type: "int", nullable: false),
+                    OpenAt = table.Column<TimeSpan>(type: "time", nullable: false),
+                    CloseAt = table.Column<TimeSpan>(type: "time", nullable: false),
+                    Day = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DoctorWorkingDays", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DoctorWorkingDays_DoctorInfos_DoctorInfoId",
+                        column: x => x.DoctorInfoId,
+                        principalTable: "DoctorInfos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "02174cf0–9412–4cfe-afbf-59f706d72cf6", "02174cf0–9412–4cfe-afbf-59f706d72cf6", "SuperAdmin", "SUPERADMIN" },
-                    { "d7fc4052-eaf9-4b0e-b00a-dabcfe0917e1", "d7fc4052-eaf9-4b0e-b00a-dabcfe0917e1", "Admin", "ADMIN" },
+                    { "02174cf0–9412–4cfe-afbf-59f706d72cf6", "02174cf0–9412–4cfe-afbf-59f706d72cf6", "Admin", "ADMIN" },
+                    { "d7fc4052-eaf9-4b0e-b00a-dabcfe0917e1", "d7fc4052-eaf9-4b0e-b00a-dabcfe0917e1", "Doctor", "Doctor" },
                     { "f7ae0ec7-9746-4389-a8e4-1ce44265c89b", "f7ae0ec7-9746-4389-a8e4-1ce44265c89b", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "Address", "BirthDate", "ConcurrencyStamp", "Country", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "ProfilePicture", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "341743f0-asd2–42de-afbf-59kmkkmk72cf6", 0, null, null, "b9ff81c2-6dd1-4ee0-a4cf-fb3d4a5186ce", null, "SuperAdmin@test.com", true, "Super", "Admin", false, null, "SuperAdmin@TEST.COM", "SUPERADMIN", "AQAAAAEAACcQAAAAEIobKF2h/qjLj7zwlNGLjyWWr71708espR5CQ/n0nLon8Wc+vX/KmSZr+MBHuRhU3Q==", null, false, null, "0126bbba-c3bd-4a2b-b9ab-25ad43b5bd52", false, "SuperAdmin@TEST.COM" });
+                columns: new[] { "Id", "AccessFailedCount", "Address", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "Governorate", "LastName", "Latitude", "LockoutEnabled", "LockoutEnd", "Longitude", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "ProfilePicture", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "341743f0-asd2–42de-afbf-59kmkkmk72cf6", 0, null, null, "71dd4f74-f784-41e5-916b-eb97dfb2c6c0", "SuperAdmin@test.com", true, "Super", 0, "Admin", null, false, null, null, "SuperAdmin@TEST.COM", "SUPERADMIN", "AQAAAAEAACcQAAAAEGhQVVaKMMOUEBMPghYLSjqbuUR53TeVhFuKcnkSe62vB/7KJc5CB7AEr14DHDvI+Q==", null, false, null, "864801e9-0c7f-4ae4-b5a9-d1f01c877770", false, "SuperAdmin@TEST.COM" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -446,6 +502,16 @@ namespace APIdemo.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DoctorInfos_UserId",
+                table: "DoctorInfos",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DoctorWorkingDays_DoctorInfoId",
+                table: "DoctorWorkingDays",
+                column: "DoctorInfoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MedicalReports_UserId",
                 table: "MedicalReports",
                 column: "UserId");
@@ -498,6 +564,9 @@ namespace APIdemo.Migrations
                 name: "BookMarks");
 
             migrationBuilder.DropTable(
+                name: "DoctorWorkingDays");
+
+            migrationBuilder.DropTable(
                 name: "MedicalReports");
 
             migrationBuilder.DropTable(
@@ -514,6 +583,9 @@ namespace APIdemo.Migrations
 
             migrationBuilder.DropTable(
                 name: "Diseases");
+
+            migrationBuilder.DropTable(
+                name: "DoctorInfos");
 
             migrationBuilder.DropTable(
                 name: "Chats");

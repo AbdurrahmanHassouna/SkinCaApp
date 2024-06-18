@@ -1,6 +1,6 @@
 ﻿namespace APIdemo.DTOs
 {
-    public class UserDto
+    public class ChatUserDto
     {
         public string Id {  get; set; }
         public string FirstName { get; set; }

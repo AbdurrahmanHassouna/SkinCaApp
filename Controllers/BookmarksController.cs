@@ -43,14 +43,17 @@ namespace APIdemo.Controllers
                     Title = b.Disease.Title
                 })
                 .ToListAsync();
-
+            if (bookmarks.Count==0)
+            {
+                return Ok(new { message = "empty" });
+            }
             return Ok(bookmarks);
         }
         // Post: api/bookmarks/{diseaseId}
         [HttpPost("{diseaseId}")]
         public async Task<IActionResult> PostBookmarks(int diseaseId)
         {
-            var disease =await  _context.Diseases.FindAsync(diseaseId);
+            var disease = await _context.Diseases.FindAsync(diseaseId);
             if (disease == null)
             {
                 return NotFound(new { status = false, message = "disease not found" });
@@ -62,15 +65,15 @@ namespace APIdemo.Controllers
             };
             await _context.BookMarks.AddAsync(newBookmark);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(GetUserBookmarks));
+            return NoContent();
         }
         // Delete: api/bookmarks/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBookmark(int id)
         {
-            
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var bookmark = _context.BookMarks.FirstOrDefault(u=>u.UserId==userId&&u.Id==id);
+            var bookmark = _context.BookMarks.FirstOrDefault(u => u.UserId==userId&&u.Id==id);
             if (bookmark == null)
             {
                 return NotFound();

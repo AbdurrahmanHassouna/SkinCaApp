@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using APIdemo.Models;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace APIdemo.DTOs
@@ -6,22 +7,21 @@ namespace APIdemo.DTOs
 
     public class RegisterModel
     {
-        [MaxLength(50), Required]
+        
+        [MaxLength(50)]
         public string FirstName { get; set; }
-        [MaxLength(100), Required]
+        [MaxLength(100)]
         public string LastName { get; set; }
-        [Required]
         public string PhoneNumber { get; set; }
-        [Required]
         public DateTime BirthDate { get; set; }
-        [Required]
-        public string Country { get; set; }
-        [Required]
-        public string Address { get; set; }
-        [EmailAddress, StringLength(128), Required]
+        public Governorate Governorate { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
+        public string? Address { get; set; }
+        [EmailAddress, StringLength(128)]
         public string Email { get; set; }
-        [PasswordPropertyText, StringLength(128), Required]
+        [PasswordPropertyText, StringLength(128)]
         public string Password { get; set; }
-        public IFormFile? File { get; set; }
+        public IFormFile? ProfilePicture { get; set; }
     }
 }

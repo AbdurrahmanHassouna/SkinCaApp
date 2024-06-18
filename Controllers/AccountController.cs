@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
 using System.ComponentModel.DataAnnotations;
 
 namespace APIdemo.Controllers
@@ -20,8 +21,10 @@ namespace APIdemo.Controllers
         private readonly IAuthService _authService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<AccountController> _logger;
-        public AccountController(IAuthService authService, UserManager<ApplicationUser> userManager, ILogger<AccountController> logger)
+        private readonly AppDbContext _context;
+        public AccountController(IAuthService authService, UserManager<ApplicationUser> userManager, ILogger<AccountController> logger,AppDbContext appDbContext)
         {
+            _context= appDbContext;
             _authService = authService;
             _userManager = userManager;
             _logger=logger;
@@ -43,6 +46,38 @@ namespace APIdemo.Controllers
             }
             return Ok(result);
         }
+       /* [HttpPost("doctor-register")]
+        public async Task<IActionResult> DoctorRegisterAsync([FromForm] DoctorRegisterDto model, [FromHeader] string? lang = "en")
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _authService.RegisterAsync(model, lang);
+
+            if (!result.IsAuthenticated)
+            {
+                return BadRequest(new { result.Message, result.Errors, status = false });
+            }
+            var user =await _userManager.FindByEmailAsync(model.Email);
+            await _userManager.AddToRoleAsync(user, "Doctor");
+
+            var doctorInfo = new DoctorInfo
+            {
+                UserId = user.Id,
+                Experience = model.Experience,
+                ClinicFees = model.ClinicFees,
+                Description = model.Description,
+                Services = string.Join(",",model.Services),
+                Specialization = model.Specialization
+            };
+            await _context.DoctorInfos.AddAsync(doctorInfo);
+            await _context.SaveChangesAsync();
+
+            return Ok(result);
+        }
+       */
         [HttpPost("get-token")]
         public async Task<IActionResult> GetToken([FromBody] LoginModel model, [FromHeader] string? lang = "en")
         {
@@ -57,7 +92,7 @@ namespace APIdemo.Controllers
             }
             return Ok(new { result.Token, result.Roles, result.ExpiresOn, status = result.IsAuthenticated });
         }
-        [HttpPost("get-user-id")]
+        [HttpGet("get-user-id")]
         [Authorize]
         public async Task<IActionResult> GetUserId()
         {
@@ -162,7 +197,7 @@ namespace APIdemo.Controllers
 
             return Ok(new { status = result.Succeeded });
         }
-        [HttpPost("profile"),Authorize]
+        [HttpGet("profile"),Authorize]
         public async Task<IActionResult> Profile()
         {
             var user =await  _userManager.GetUserAsync(User);
@@ -177,8 +212,10 @@ namespace APIdemo.Controllers
                 FirstName= user.FirstName,
                 LastName= user.LastName,
                 Address = user.Address,
+                Governorate = user.Governorate,
+                Latitude = user.Latitude,
+                Longitude = user.Longitude,
                 BirthDate = user.BirthDate,
-                Country = user.Country,
                 PhoneNumber = user.PhoneNumber
             };
             string? type=null;
@@ -205,8 +242,13 @@ namespace APIdemo.Controllers
             user.Address= profile.Address;
             user.FirstName= profile.FirstName;
             user.LastName= profile.LastName;
-            user.Country= profile.Country;
+            user.Address = profile.Address;
+            user.BirthDate= profile.BirthDate;
             user.PhoneNumber=profile.PhoneNumber;
+            user.Governorate = profile.Governorate;
+            user.Latitude= profile.Latitude;
+            user.Longitude= profile.Longitude;
+
             if(profile.Email.ToUpper()!=user.NormalizedEmail)
             { 
                 if((await _userManager.FindByEmailAsync(profile.Email))!= null)
@@ -263,26 +305,7 @@ namespace APIdemo.Controllers
            
             return BadRequest();
         }
-
-        [HttpGet("facebook")]
-        public IActionResult FacebookLogin()
-        {
-            var properties = new AuthenticationProperties { RedirectUri = Url.Action(nameof(FacebookResponse)) };
-            return Challenge(properties, FacebookDefaults.AuthenticationScheme);
-        }
-
-        [HttpGet("facebook-response")]
-        public async Task<IActionResult> FacebookResponse()
-        {
-            var result = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
-            if (result?.Principal != null)
-            {
-                // Process the authentication result
-                // Generate JWT token and return
-            }
-            return BadRequest();
-        }
-
+        
         [HttpPut("profile-picture"),Authorize]
         public async Task<IActionResult> UploadProfilePicture([FromForm] IFormFile file)
         {
@@ -316,6 +339,18 @@ namespace APIdemo.Controllers
 
             return Ok(new {status=true, message="Profile picture uploaded successfully." });
         }
+        [HttpDelete("delete-account"),Authorize]
+        public async Task<IActionResult> DeleteAccount([FromHeader] string? lang = "en")
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound(new { status = false, message = (lang=="ar") ? "لم يتم العثور علي مستخدم" : "User not found" });
+            }
+            await _userManager.DeleteAsync(user);
+            return NoContent();
+        }
+       
 
     }
 }

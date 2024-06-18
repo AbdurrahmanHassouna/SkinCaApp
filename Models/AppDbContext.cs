@@ -24,6 +24,8 @@ namespace APIdemo.Models
         public DbSet<Disease> Diseases { get; set; }
         public DbSet<Banner> Banners { get; set; }
         public DbSet<ModelResult> ModelResults { get; set; }
+        public DbSet<DoctorInfo> DoctorInfos { get; set; }
+        public DbSet<DoctorWorkingDay> DoctorWorkingDays { get; set; }
         public DbSet<Reminder> Reminders { get; set; }
         public DbSet<ApplicationUserChat> ApplicationUserChats { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
@@ -57,7 +59,7 @@ namespace APIdemo.Models
                         .HasOne(uc => uc.User)
                         .WithMany(u => u.ApplicationUserChats)
                         .HasForeignKey(uc => uc.UserId)
-                        .OnDelete(DeleteBehavior.Cascade),
+                        .OnDelete(DeleteBehavior.Restrict),
                     j => j
                         .HasOne(uc => uc.Chat)
                         .WithMany(c => c.ApplicationUserChats)
@@ -67,7 +69,7 @@ namespace APIdemo.Models
                     {
                         j.HasKey(uc => new { uc.UserId, uc.ChatId });
                     });
-
+            
 
             builder.Entity<ApplicationUser>().Property(x => x.BirthDate).HasColumnType("DATE");
 
@@ -78,15 +80,15 @@ namespace APIdemo.Models
                     new IdentityRole
                     {
                         Id = roleId,
-                        Name = "SuperAdmin",
-                        NormalizedName="SUPERADMIN",
+                        Name = "Admin",
+                        NormalizedName="ADMIN",
                         ConcurrencyStamp=roleId
                     },
                     new IdentityRole
                     {
                         Id = "d7fc4052-eaf9-4b0e-b00a-dabcfe0917e1",
-                        Name = "Admin",
-                        NormalizedName="ADMIN",
+                        Name = "Doctor",
+                        NormalizedName="Doctor",
                         ConcurrencyStamp="d7fc4052-eaf9-4b0e-b00a-dabcfe0917e1"
                     },
                     new IdentityRole
