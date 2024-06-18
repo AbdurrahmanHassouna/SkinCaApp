@@ -90,7 +90,7 @@ namespace APIdemo.Controllers
             {
                 return BadRequest(new { result.Message, status = false });
             }
-            return Ok(new { result.Token, result.Roles, result.ExpiresOn, status = result.IsAuthenticated });
+            return Ok(new {result});
         }
         [HttpGet("get-user-id")]
         [Authorize]

@@ -141,7 +141,7 @@ namespace APIdemo.Controllers
 
             var doctorInfo = new DoctorInfo
             {
-                UserId = result.Id,
+                UserId = (await _userManager.FindByEmailAsync(model.Email)).Id,
                 Experience = model.Experience,
                 ClinicFees = model.ClinicFees,
                 Description = model.Description,

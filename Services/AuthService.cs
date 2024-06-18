@@ -83,9 +83,8 @@ namespace APIdemo.Services
             var jwtSecurityToken = await CreateJwtToken(user);
             return new AuthModel
             {
-                Id = user.Id,
                 Email = user.Email,
-                Roles =await _userManager.GetRolesAsync(user),
+                IsDoctor =await _userManager.IsInRoleAsync(user, "Doctor"),
                 ExpiresOn = jwtSecurityToken.ValidTo,
                 IsAuthenticated = true,
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken)
@@ -150,7 +149,7 @@ namespace APIdemo.Services
                 Email = user.Email,
                 ExpiresOn = JwtSecurityToken.ValidTo,
                 IsAuthenticated = true,
-                Roles = (await _userManager.GetRolesAsync(user)).ToList(),
+                IsDoctor = await _userManager.IsInRoleAsync(user,"Doctor"),
                 Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken)
             };
         }
