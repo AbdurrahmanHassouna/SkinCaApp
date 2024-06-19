@@ -38,7 +38,7 @@ namespace APIdemo.Controllers
             var diseases = await _context.Diseases
                .Where(d => d.Title.Contains(name))
                .ToListAsync();
-
+           
             var diseasesDto = diseases.Select(d => new 
             {
                 Id = d.Id,
@@ -101,7 +101,7 @@ namespace APIdemo.Controllers
         {
             if (string.IsNullOrEmpty(name))
             {
-                return BadRequest("Name parameter is required.");
+                return BadRequest("Search parameter is required.");
             }
 
             var doctors = await _context.Users.Where(u => u.DoctorInfo != null&&(u.FirstName.Contains(name)||u.LastName.Contains(name)))

@@ -39,10 +39,9 @@ namespace APIdemo.Controllers
             }
             
             var result = await _authService.RegisterAsync(model, lang);
-
             if (!result.IsAuthenticated)
             {
-                return BadRequest(new { result.Message, result.Errors, status = false });
+                return BadRequest(result);
             }
             return Ok(result);
         }
@@ -88,9 +87,9 @@ namespace APIdemo.Controllers
             var result = await _authService.GetTokenAsync(model, lang);
             if (!result.IsAuthenticated)
             {
-                return BadRequest(new { result.Message, status = false });
+                return BadRequest(result);
             }
-            return Ok(new {result});
+            return Ok(result);
         }
         [HttpGet("get-user-id")]
         [Authorize]

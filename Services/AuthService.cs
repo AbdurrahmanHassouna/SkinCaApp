@@ -69,20 +69,23 @@ namespace APIdemo.Services
                     string? type = ImageTools.GetImageType(user.ProfilePicture);
                     if (type == null)
                     {
-                        return new AuthModel { Message = "unsupported picture type" };
+                        return new AuthModel { IsAuthenticated= false ,Message = "unsupported picture type" };
                     }
                 }
             }
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
-                return new AuthModel { Errors = result.Errors.Select(e => e.Description).ToList() };
+                return new AuthModel { IsAuthenticated = false,Errors = result.Errors.Select(e => e.Description).ToList(),Message= "Unable to Register the User"};
             }
             await _userManager.AddToRoleAsync(user,role);
            
             var jwtSecurityToken = await CreateJwtToken(user);
             return new AuthModel
             {
+                UserName= user.FirstName,
+                ProfilePicture = user.ProfilePicture,
+                Message = (lang == "ar") ? "تم التسجيل بنجاح" : "Email is registered successfully",
                 Email = user.Email,
                 IsDoctor =await _userManager.IsInRoleAsync(user, "Doctor"),
                 ExpiresOn = jwtSecurityToken.ValidTo,
@@ -127,14 +130,18 @@ namespace APIdemo.Services
             {
                 return new AuthModel
                 {
-                    Message = (lang == "ar") ? "الحساب غير مسجل" : "Email is not registered"
+                    
+                    Message = (lang == "ar") ? "الحساب غير مسجل" : "Email is not registered",
+                    Errors = new List<string> { (lang == "ar") ? "الحساب غير مسجل" : "Email is not registered" },
+                    IsAuthenticated=false
                 };
             }
             if (!await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 return new AuthModel
                 {
-                    Message = (lang == "ar") ? "كلمة مرور خاطئة" : "Password is not Correct"
+                    Message = (lang == "ar") ? "كلمة مرور خاطئة" : "Password is not Correct",
+                    IsAuthenticated=false
                 };
             }
             /*if (!await _userManager.IsEmailConfirmedAsync(user))
@@ -145,6 +152,8 @@ namespace APIdemo.Services
             var JwtSecurityToken = await CreateJwtToken(user);
             return new AuthModel
             {
+                UserName = user.FirstName,
+                ProfilePicture = user.ProfilePicture,
                 Message = (lang == "ar") ? "تم التسجيل بنجاح" : "Successful Login",
                 Email = user.Email,
                 ExpiresOn = JwtSecurityToken.ValidTo,
