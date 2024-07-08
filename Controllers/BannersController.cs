@@ -15,7 +15,7 @@ using System.Linq.Expressions;
 namespace APIdemo.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController, Authorize]
+    [ApiController]
     public class BannersController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -25,8 +25,8 @@ namespace APIdemo.Controllers
             _context = context;
         }
 
-        // GET: api/Banners
-        [HttpGet]
+       
+        [HttpGet,Authorize]
         public async Task<IActionResult> GetBanners()
         {
             if (_context.Banners == null)
@@ -44,8 +44,8 @@ namespace APIdemo.Controllers
             });
         }
 
-        // GET: api/Banners/5
-        [HttpGet("{id}")]
+       
+        [HttpGet("{id}"),Authorize]
         public async Task<IActionResult> GetBanner(int id)
         {
             if (_context.Banners == null)
@@ -62,10 +62,8 @@ namespace APIdemo.Controllers
 
             return Ok(new { banner, status = true });
         }
-
-        // PUT: api/Banners/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+      
+        [HttpPut("{id}"),Authorize(Roles ="Admin")]
         public async Task<IActionResult> PutBanner(int id, [FromForm] BannerDto banner)
         {
             if (!ModelState.IsValid)
@@ -98,29 +96,13 @@ namespace APIdemo.Controllers
 
 
             _context.Entry(Banner).State = EntityState.Modified;
+             await _context.SaveChangesAsync();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BannerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(Banner);
         }
 
-        // POST: api/Banners
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+       
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task<IActionResult> PostBanner([FromForm] BannerDto banner)
         {
             if (!ModelState.IsValid)
@@ -157,8 +139,8 @@ namespace APIdemo.Controllers
             return CreatedAtAction(nameof(GetBanner), new { id = newBanner.Id }, banner);
         }
 
-        // DELETE: api/Banners/5
-        [HttpDelete("{id}")]
+        
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteBanner(int id)
         {
             if (_context.Banners == null)

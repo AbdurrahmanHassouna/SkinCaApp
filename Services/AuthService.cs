@@ -46,13 +46,13 @@ namespace APIdemo.Services
 
             var user = new ApplicationUser
             {
-                UserName = model.Email,
-                Email = model.Email,
-                PhoneNumber = model.PhoneNumber,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                BirthDate = model.BirthDate,
-                Address = model.Address,
+                UserName = model.Email.Trim(),
+                Email = model.Email.Trim(),
+                PhoneNumber = model.PhoneNumber.Trim(),
+                FirstName = model.FirstName.Trim(),
+                LastName = model.LastName.Trim(),
+                BirthDate =(model.BirthDate != DateTime.MinValue)?model.BirthDate : null,
+                Address = model.Address?.Trim(),
                 Governorate = model.Governorate,
                 Latitude=model.Latitude,
                 Longitude=model.Longitude
@@ -73,7 +73,7 @@ namespace APIdemo.Services
                     }
                 }
             }
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.Password.Trim());
             if (!result.Succeeded)
             {
                 return new AuthModel { IsAuthenticated = false,Errors = result.Errors.Select(e => e.Description).ToList(),Message= "Unable to Register the User"};
@@ -83,7 +83,7 @@ namespace APIdemo.Services
             var jwtSecurityToken = await CreateJwtToken(user);
             return new AuthModel
             {
-                UserName= user.FirstName,
+                UserName= user.FirstName+" "+user.LastName,
                 ProfilePicture = user.ProfilePicture,
                 Message = (lang == "ar") ? "تم التسجيل بنجاح" : "Email is registered successfully",
                 Email = user.Email,

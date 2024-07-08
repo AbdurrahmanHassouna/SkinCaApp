@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace APIdemo.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController,Authorize]
+    [ApiController, Authorize]
     public class DiseasesController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -26,15 +26,24 @@ namespace APIdemo.Controllers
 
         // GET: api/Diseases
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DiseaseOverViewDto>>> GetDiseases()
+        public async Task<IActionResult> GetDiseases()
         {
-            return await _context.Diseases
-                .Select(d => new DiseaseOverViewDto
-                {
-                    Id = d.Id,
-                    Title = d.Title,
-                    Image = d.Image
-                }).ToListAsync();
+            var diseases = await _context.Diseases.ToListAsync();
+
+            var diseaseDtos = diseases.Select(d => new DiseaseDto
+            {
+                Id = d.Id,
+                Title = d.Title,
+                Specialty = d.Specialty,
+                Symptoms = d.Symptoms.Split(","),
+                Types = d.Types?.Split(","),
+                Causes = d.Causes?.Split(","),
+                DiagnosticMethods = d.DiagnosticMethods?.Split(","),
+                Prevention = d.Prevention?.Split(","),
+                Image = d.Image
+            }).ToList();
+
+            return Ok(diseaseDtos);
         }
 
         // GET: api/Diseases/5
@@ -63,40 +72,77 @@ namespace APIdemo.Controllers
             };
             return diseaseDto;
         }
-        // GET: api/Diseases/search
-        [HttpGet("search")]
-        public async Task<ActionResult<IEnumerable<DiseaseDto>>> SearchDiseases([FromQuery] string name)
+        
+        [HttpGet("search/{name}")]
+        public async Task<ActionResult<IEnumerable<DiseaseDto>>> SearchDiseases(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
                 return BadRequest("Name parameter is required.");
             }
 
+            name = name.ToLower();
+
+            
             var diseases = await _context.Diseases
-                .Where(d => d.Title.Contains(name))
+                .Where(d => d.Title.ToLower().Contains(name))
+                .Select(d => new
+                {
+                    d.Id,
+                    d.Title,
+                    d.Specialty,
+                    d.Symptoms,
+                    d.Types,
+                    d.Causes,
+                    d.DiagnosticMethods,
+                    d.Prevention,
+                    d.Image
+                })
                 .ToListAsync();
 
-            if (diseases.Count == 0)
+            
+            var diseasesStartsWith = diseases
+                .Where(d => d.Title.ToLower().StartsWith(name))
+                .Select(d => new DiseaseDto
+                {
+                    Id = d.Id,
+                    Title = d.Title,
+                    Specialty = d.Specialty,
+                    Symptoms = d.Symptoms.Split(","),
+                    Types = d.Types?.Split(","),
+                    Causes = d.Causes?.Split(","),
+                    DiagnosticMethods = d.DiagnosticMethods?.Split(","),
+                    Prevention = d.Prevention?.Split(","),
+                    Image = d.Image
+                }).ToList();
+
+            var diseasesContains = diseases
+                .Where(d => !d.Title.ToLower().StartsWith(name))
+                .Select(d => new DiseaseDto
+                {
+                    Id = d.Id,
+                    Title = d.Title,
+                    Specialty = d.Specialty,
+                    Symptoms = d.Symptoms.Split(","),
+                    Types = d.Types?.Split(","),
+                    Causes = d.Causes?.Split(","),
+                    DiagnosticMethods = d.DiagnosticMethods?.Split(","),
+                    Prevention = d.Prevention?.Split(","),
+                    Image = d.Image
+                }).ToList();
+
+            
+            var diseasesDto = diseasesStartsWith.Concat(diseasesContains).ToList();
+            if (diseasesDto.Count == 0)
             {
                 return NotFound($"No diseases found with name containing '{name}'.");
             }
-            var diseasesDto = diseases.Select(d => new DiseaseDto
-            {
-                Id = d.Id,
-                Title = d.Title,
-                Specialty = d.Specialty,
-                Symptoms = d.Symptoms.Split(","),
-                Types = d.Types?.Split(','),
-                Causes = d.Causes?.Split(','),
-                DiagnosticMethods = d.DiagnosticMethods?.Split(','),
-                Prevention = d.Prevention?.Split(','),
-                Image = d.Image
-            });
+
             return Ok(diseases);
         }
 
         // PUT: api/Diseases/5
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutDisease(int id, [FromForm] DiseaseDto diseaseDto, [FromForm] IFormFile? imageFile)
         {
             if (id != diseaseDto.Id)
@@ -130,7 +176,7 @@ namespace APIdemo.Controllers
                     string? type = ImageTools.GetImageType(disease.Image);
                     if (type == null)
                     {
-                        return BadRequest(new {status=false, Message = "unsupported picture type" });
+                        return BadRequest(new { status = false, Message = "unsupported picture type" });
                     }
                 }
             }
@@ -157,7 +203,7 @@ namespace APIdemo.Controllers
         }
 
         // POST: api/Diseases
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task<ActionResult<DiseaseDto>> PostDisease([FromForm] DiseaseDto diseaseDto, [FromForm] IFormFile? imageFile)
         {
             var disease = new Disease
@@ -198,7 +244,7 @@ namespace APIdemo.Controllers
         }
 
         // DELETE: api/Diseases/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteDisease(int id)
         {
             var disease = await _context.Diseases.FindAsync(id);

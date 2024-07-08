@@ -41,7 +41,6 @@ namespace APIdemo
                 options.Tokens.PasswordResetTokenProvider = "Custom";
                 options.Tokens.ChangeEmailTokenProvider = "Custom";
                 options.Password.RequireNonAlphanumeric = false;
-                
             })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders()

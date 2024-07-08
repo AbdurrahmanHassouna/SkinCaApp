@@ -5,6 +5,7 @@ namespace APIdemo.DTOs
 {
     public class DoctorRegisterDto:RegisterModel
     { 
+       
         public int Experience { get; set; }
         [DataType(DataType.Currency)]
         public decimal ClinicFees { get; set; }
