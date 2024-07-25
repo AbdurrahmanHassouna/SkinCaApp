@@ -28,26 +28,16 @@ namespace APIdemo.Controllers
             {
                 return BadRequest("Please upload an image file.");
             }
-
-            
-
-
-
-
-
-
-
-                if (flag ==true)
-                {
-                    flag= false;
-                    return Ok(new { status = true, Content = "Normal" });
-                }
-                flag=true;
-                return Ok(new { status = true, Content = "Melanoma" });
-            
-
-
-            
+            /*
+             * AI is with Flask
+             */
+            if (flag ==true)
+            {
+                flag= false;
+                return Ok(new { status = true, Content = "Normal" });
+            }
+            flag=true;
+            return Ok(new { status = true, Content = "Melanoma" });
         }
     }
 }
