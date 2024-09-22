@@ -1,6 +1,6 @@
-﻿using APIdemo.DTOs;
-using APIdemo.Auth;
-using APIdemo.Models;
+﻿using SkinCaApp.DTOs;
+using SkinCaApp.Auth;
+using SkinCaApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
@@ -12,9 +12,9 @@ using System.Text.Encodings.Web;
 using OtpNet;
 using System;
 using Microsoft.AspNetCore.DataProtection;
-using APIdemo.Tools;
+using SkinCaApp.Tools;
 
-namespace APIdemo.Services
+namespace SkinCaApp.Services
 {
     public class AuthService : IAuthService
     {

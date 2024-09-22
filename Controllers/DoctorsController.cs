@@ -1,7 +1,6 @@
-﻿using APIdemo.DTOs;
-using APIdemo.DTOs.Response;
-using APIdemo.Models;
-using APIdemo.Services;
+﻿using SkinCaApp.DTOs;
+using SkinCaApp.Models;
+using SkinCaApp.Services;
 using GeoCoordinatePortable;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +10,7 @@ using NuGet.Common;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace APIdemo.Controllers
+namespace SkinCaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

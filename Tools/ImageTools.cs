@@ -1,4 +1,4 @@
-﻿namespace APIdemo.Tools
+﻿namespace SkinCaApp.Tools
 {
     public static class ImageTools
     {

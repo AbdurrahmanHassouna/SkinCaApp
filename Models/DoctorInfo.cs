@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace APIdemo.Models
+namespace SkinCaApp.Models
 {
     public class DoctorInfo
     {

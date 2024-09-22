@@ -1,7 +1,7 @@
 ﻿using NuGet.Protocol;
 using System.ComponentModel.DataAnnotations;
 
-namespace APIdemo.DTOs
+namespace SkinCaApp.DTOs
 {
     public class AuthModel
     {

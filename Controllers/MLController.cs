@@ -3,17 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
 using System.Linq;
-using Keras;
-using Numpy;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using Keras.Models;
 using Microsoft.AspNetCore.Http.Features;
 using NLog.Targets.Wrappers;
-using ICSharpCode.SharpZipLib.Zip;
 
-namespace APIdemo.Controllers
+namespace SkinCaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

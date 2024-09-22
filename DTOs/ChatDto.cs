@@ -1,7 +1,7 @@
-﻿using APIdemo.Models;
+﻿using SkinCaApp.Models;
 using System.Text.Json.Serialization;
 
-namespace APIdemo.DTOs
+namespace SkinCaApp.DTOs
 {
     public class ChatDto
     {

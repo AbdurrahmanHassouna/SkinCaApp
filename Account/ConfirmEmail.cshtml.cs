@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
-using APIdemo.Models;
+using SkinCaApp.Models;
 
 public class ConfirmEmailModel : PageModel
 {

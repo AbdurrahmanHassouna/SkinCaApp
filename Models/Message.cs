@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using System.ComponentModel.DataAnnotations;
 
-namespace APIdemo.Models
+namespace SkinCaApp.Models
 {
     public class Message
     {

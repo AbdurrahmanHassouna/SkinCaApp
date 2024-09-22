@@ -1,8 +1,8 @@
 ﻿using System.Net.Mail;
 using System.Net;
-using APIdemo.Authorization;
+using SkinCaApp.Authorization;
 using Microsoft.Extensions.Options;
-namespace APIdemo.Services
+namespace SkinCaApp.Services
 {
     public class EmailSender:IEmailSender
     {

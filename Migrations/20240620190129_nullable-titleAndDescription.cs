@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace APIdemo.Migrations
+namespace SkinCaApp.Migrations
 {
     public partial class nullabletitleAndDescription : Migration
     {

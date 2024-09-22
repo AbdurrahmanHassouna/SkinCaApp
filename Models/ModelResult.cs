@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 
-namespace APIdemo.Models
+namespace SkinCaApp.Models
 {
     public class ModelResult
     {

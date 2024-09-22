@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace APIdemo.Models
+namespace SkinCaApp.Models
 {
     public class Disease
     {

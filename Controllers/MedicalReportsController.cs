@@ -1,11 +1,11 @@
-﻿using APIdemo.DTOs;
-using APIdemo.Models;
+﻿using SkinCaApp.DTOs;
+using SkinCaApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace APIdemo.Controllers
+namespace SkinCaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,4 +1,4 @@
-﻿namespace APIdemo.Services
+﻿namespace SkinCaApp.Services
 {
     public interface IEmailSender
     {

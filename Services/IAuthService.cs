@@ -1,9 +1,9 @@
-﻿using APIdemo.DTOs;
-using APIdemo.Models;
+﻿using SkinCaApp.DTOs;
+using SkinCaApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
-namespace APIdemo.Services
+namespace SkinCaApp.Services
 {
     public interface IAuthService
     {

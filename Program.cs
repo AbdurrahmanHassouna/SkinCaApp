@@ -1,8 +1,8 @@
-using APIdemo.Auth;
-using APIdemo.Authorization;
-using APIdemo.Models;
-using APIdemo.Services;
-using APIdemo.TokenProviders;
+using SkinCaApp.Auth;
+using SkinCaApp.Authorization;
+using SkinCaApp.Models;
+using SkinCaApp.Services;
+using SkinCaApp.TokenProviders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.Options;
@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace APIdemo
+namespace SkinCaApp
 {
     public class Program
     {

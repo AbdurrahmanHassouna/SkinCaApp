@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using OtpNet;
 
-namespace APIdemo.TokenProviders
+namespace SkinCaApp.TokenProviders
 {
     public class CustomTokenProvider<TUser> : DataProtectorTokenProvider<TUser> where TUser : class
     {

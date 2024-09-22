@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using APIdemo.Models;
-using APIdemo.DTOs;
-using APIdemo.Tools;
+using SkinCaApp.Models;
+using SkinCaApp.DTOs;
+using SkinCaApp.Tools;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq.Expressions;
 
-namespace APIdemo.Controllers
+namespace SkinCaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

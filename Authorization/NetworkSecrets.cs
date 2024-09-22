@@ -1,4 +1,4 @@
-﻿namespace APIdemo.Authorization
+﻿namespace SkinCaApp.Authorization
 {
     public class NetworkSecrets
     {

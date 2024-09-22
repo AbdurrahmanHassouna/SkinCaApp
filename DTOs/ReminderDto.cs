@@ -1,6 +1,6 @@
-﻿using APIdemo.Models;
+﻿using SkinCaApp.Models;
 
-namespace APIdemo.DTOs
+namespace SkinCaApp.DTOs
 {
     public class ReminderDto
     {

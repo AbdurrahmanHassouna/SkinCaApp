@@ -1,4 +1,4 @@
-﻿namespace APIdemo.Auth
+﻿namespace SkinCaApp.Auth
 {
     public class JWT
     {

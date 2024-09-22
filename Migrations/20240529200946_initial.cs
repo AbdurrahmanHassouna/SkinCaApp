@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace APIdemo.Migrations
+namespace SkinCaApp.Migrations
 {
     public partial class initial : Migration
     {

@@ -1,4 +1,4 @@
-﻿namespace APIdemo.Models
+﻿namespace SkinCaApp.Models
 {
     public class BannerDto
     {

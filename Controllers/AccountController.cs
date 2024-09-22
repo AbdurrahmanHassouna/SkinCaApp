@@ -1,7 +1,7 @@
-﻿using APIdemo.DTOs;
-using APIdemo.Models;
-using APIdemo.Services;
-using APIdemo.Tools;
+﻿using SkinCaApp.DTOs;
+using SkinCaApp.Models;
+using SkinCaApp.Services;
+using SkinCaApp.Tools;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
 using System.ComponentModel.DataAnnotations;
 
-namespace APIdemo.Controllers
+namespace SkinCaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

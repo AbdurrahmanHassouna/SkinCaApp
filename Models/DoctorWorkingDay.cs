@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace APIdemo.Models
+namespace SkinCaApp.Models
 {
     public class DoctorWorkingDay
     {

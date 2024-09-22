@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace APIdemo.Models
+namespace SkinCaApp.Models
 {
     public class BookMark
     {

@@ -5,10 +5,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using APIdemo.DTOs;
-using APIdemo.Models;
+using SkinCaApp.DTOs;
+using SkinCaApp.Models;
 
-namespace APIdemo.Controllers
+namespace SkinCaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

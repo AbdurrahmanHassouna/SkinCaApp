@@ -1,10 +1,9 @@
-﻿using APIdemo.Models;
+﻿using SkinCaApp.Models;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace APIdemo.DTOs
+namespace SkinCaApp.DTOs
 {
-
     public class RegisterModel
     {
         

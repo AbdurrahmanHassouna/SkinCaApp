@@ -1,7 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 
-namespace APIdemo.DTOs
+namespace SkinCaApp.DTOs
 {
     public class DoctorRegisterDto:RegisterModel
     { 

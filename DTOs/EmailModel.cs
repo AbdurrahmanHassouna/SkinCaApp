@@ -1,4 +1,4 @@
-﻿namespace APIdemo.DTOs
+﻿namespace SkinCaApp.DTOs
 {
     public class EmailModel
     {

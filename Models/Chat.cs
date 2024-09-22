@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Common;
 using System.Text.Json.Serialization;
 
-namespace APIdemo.Models
+namespace SkinCaApp.Models
 {
     public class Chat
     {

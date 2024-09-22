@@ -1,8 +1,8 @@
-﻿using APIdemo.Models;
+﻿using SkinCaApp.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace APIdemo.DTOs
+namespace SkinCaApp.DTOs
 {
     public class ProfileDTO
     {

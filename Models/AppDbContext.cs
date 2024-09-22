@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
 
-namespace APIdemo.Models
+namespace SkinCaApp.Models
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {

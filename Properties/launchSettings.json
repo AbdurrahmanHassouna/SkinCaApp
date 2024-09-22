@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "APIdemo": {
+    "SkinCaApp": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
