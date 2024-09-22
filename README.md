@@ -32,51 +32,20 @@ git clone https://github.com/AbdurrahmanHassouna/SkinCaApp.git
    ```
    dotnet restore
    ```
-3. Build the project:
+
+4. Apply Migrations
+   ```
+   dotnet ef database update
+   ```
+6. Build the project:
    ```
    dotnet build
    ```
-4. Run the API:
+   
+7. Run the API:
    ```
    dotnet run
    ```
-
-## API Endpoints
-
-### POST /api/Account/register
-- **Request**: Register a new user account.
-- **Body**: 
-  ```json
-  {
-    "firstName": "string",
-    "lastName": "string",
-    "email": "user@example.com",
-    "password": "string"
-  }
-  ```
-- **Response**: JSON object containing authentication result and token.
-
-### POST /api/Account/get-token
-- **Request**: Obtain an authentication token.
-- **Body**: 
-  ```json
-  {
-    "email": "user@example.com",
-    "password": "string"
-  }
-  ```
-- **Response**: JSON object containing authentication result and token.
-
-### GET /api/Account/profile
-- **Request**: Get the user's profile information.
-- **Headers**: Authorization: Bearer {token}
-- **Response**: JSON object containing user profile information.
-
-### POST /api/ML (Requires authentication)
-- **Request**: Upload an image of the skin lesion for analysis (multipart/form-data format).
-- **Headers**: Authorization: Bearer {token}
-- **Response**: JSON object containing the predicted likelihood of cancer and additional details.
-
 ## Authentication
 
 SkinCa utilizes JWT authentication for API access. You need to register an account and obtain a JWT token to access protected endpoints.
