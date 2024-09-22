@@ -9,12 +9,11 @@ namespace SkinCaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // Requires authentication for all actions
+    [Authorize] 
     public class MedicalReportsController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly AppDbContext _context; // Your DbContext
-
+        private readonly AppDbContext _context;
         public MedicalReportsController(UserManager<ApplicationUser> userManager, AppDbContext context)
         {
             _userManager = userManager;
@@ -102,7 +101,7 @@ namespace SkinCaApp.Controllers
             existingReport.ReportType= model.ReportType;
             existingReport.Content=model.Content;
 
-            // Handle image upload
+            
             if (model.ReportFile != null)
             {
                 using (var memoryStream = new MemoryStream())
