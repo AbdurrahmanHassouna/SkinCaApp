@@ -24,7 +24,6 @@ namespace SkinCaApp
             builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
             {
                 options.SuppressModelStateInvalidFilter = false;
-
             });
             
             builder.Services.Configure<JWT>(_configuration.GetSection("JWT"));
@@ -59,7 +58,7 @@ namespace SkinCaApp
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidateLifetime = true,//default is True;
+                    ValidateLifetime = true,//default is True
                     ValidIssuer = _configuration["JWT:Issuer"],
                     ValidAudience = _configuration["JWT:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]))
@@ -96,7 +95,6 @@ namespace SkinCaApp
            
 
             app.MapControllers();
-           
             
             app.Run();
         }
